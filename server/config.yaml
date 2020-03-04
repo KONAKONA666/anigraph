@@ -1,0 +1,13 @@
+redis:
+  host: 127.0.0.1
+  port: 6379
+  minsize: 1
+  maxsize: 10
+
+sqlite:
+  path_db: 'db.sqlite'
+
+host: 127.0.0.1
+port: 8080
+max_workers: 2
+model_file: 'doc2vec'
