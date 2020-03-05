@@ -1,6 +1,7 @@
 import asyncio
 import logging
 import pathlib
+import os
 
 import aiohttp_jinja2
 import jinja2
@@ -51,6 +52,9 @@ def setup_jinja(app: web.Application):
 
 async def init(loop):
     conf = load_config(PROJECT_ROOT/'config.yaml')
+
+    port = int(os.environ.get('PORT', conf['port']))
+    conf['port'] = port
 
     app = web.Application(loop=loop)
     redis_pool = await setup_redis(app, conf, loop)
