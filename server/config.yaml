@@ -1,13 +1,13 @@
 redis:
-  host: 127.0.0.1
-  port: 6379
+  host: redis://h:pbf67a300f6b7ecfa6b90057076bc92e3d4e2d4d05fd436812280a101670b34be@ec2-52-203-69-143.compute-1.amazonaws.com
+  port: 14749
   minsize: 1
   maxsize: 10
 
 sqlite:
   path_db: 'db.sqlite'
 
-host: 127.0.0.1
+host: http://arcane-citadel-67299.herokuapp.com/
 port: 8080
 max_workers: 2
 model_file: 'doc2vec'
