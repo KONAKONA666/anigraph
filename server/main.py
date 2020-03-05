@@ -65,6 +65,7 @@ async def init(loop):
     handler = MainPageHandler(redis_pool, conf, executor, sqlite_connection)
     setup_routes(app, handler, STATIC_ROOT)
 
+
     return app, conf['host'], conf['port']
 
 
