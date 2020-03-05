@@ -7,7 +7,7 @@ redis:
 sqlite:
   path_db: 'db.sqlite'
 
-host: http://arcane-citadel-67299.herokuapp.com/
+host: https://arcane-citadel-67299.herokuapp.com
 port: 8080
 max_workers: 2
 model_file: 'doc2vec'
