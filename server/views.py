@@ -52,10 +52,11 @@ class MainPageHandler:
         is_cached = await self._redis.exists('neighbours:{}'.format(title))
         if is_cached:
             res = await self._redis.lrange('neighbours:{}'.format(title), 0, -1)
-            res = [a.decode('utf-8') for a in res]
+            res = [json.loads(a.decode('utf-8')) for a in res]
         else:
             res = await get_region_neighbours(self._connection_sqlite, title, margin)
-            await self._redis.lpush('neighbours:{}'.format(title), *res)
+            res_to_cache = [json.dumps(a) for a in res]
+            await self._redis.lpush('neighbours:{}'.format(title), *res_to_cache)
             await self._redis.expire('neighbours:{}'.format(title), 60*60)
         return web.json_response(res)
 
