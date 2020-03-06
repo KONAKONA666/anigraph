@@ -48,8 +48,6 @@ def setup_jinja(app: web.Application):
 
 
 
-
-
 async def init(loop):
     conf = load_config(PROJECT_ROOT/'config.yaml')
 
@@ -57,11 +55,11 @@ async def init(loop):
     conf['port'] = port
 
     app = web.Application(loop=loop)
-    #redis_pool = await setup_redis(app, conf, loop)
+    redis_pool = await setup_redis(app, conf, loop)
     sqlite_connection = await setup_sqlite(app, conf, loop)
     setup_jinja(app)
     executor = await init_workers(app, conf)
-    redis_pool = None
+    #redis_pool = None
     handler = MainPageHandler(redis_pool, conf, executor, sqlite_connection)
     setup_routes(app, handler, STATIC_ROOT)
 

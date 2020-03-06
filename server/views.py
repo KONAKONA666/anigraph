@@ -1,6 +1,6 @@
 import asyncio
 import logging
-
+import json
 
 import aiohttp_jinja2
 from aiohttp import web
@@ -32,8 +32,15 @@ class MainPageHandler:
 
     async def autocomplete(self, request: web.Request):
         prefix = request.match_info['prefix']
-        res = await get_autocomplete(self._connection_sqlite, prefix)
-        res = [a[0] for a in res]
+        is_cahced = await self._redis.exists('autocomplete:{}'.format(prefix))
+        if is_cahced:
+            res = await self._redis.lrange('autocomplete:{}'.format(prefix), 0, -1)
+            res = [a.decode('utf-8') for a in res]
+        else:
+            res = await get_autocomplete(self._connection_sqlite, prefix)
+            res = [a[0] for a in res]
+            await self._redis.rpush('autocomplete:{}'.format(prefix), *res)
+            await self._redis.expire('autocomplete:{}'.format(prefix), 60*60)
         return web.json_response(res)
 
     async def get_all_points(self, request: web.Request):
@@ -42,8 +49,14 @@ class MainPageHandler:
 
     async def get_neighbours(self, request: web.Request):
         title, margin = request.match_info['title'], request.match_info['margin']
-        res = await get_region_neighbours(self._connection_sqlite, title, margin)
-        #self.logger.info(res)
+        is_cached = await self._redis.exists('neighbours:{}'.format(title))
+        if is_cached:
+            res = await self._redis.lrange('neighbours:{}'.format(title), 0, -1)
+            res = [a.decode('utf-8') for a in res]
+        else:
+            res = await get_region_neighbours(self._connection_sqlite, title, margin)
+            await self._redis.lpush('neighbours:{}'.format(title), *res)
+            await self._redis.expire('neighbours:{}'.format(title), 60*60)
         return web.json_response(res)
 
     async def get_analogy(self, request: web.Request):

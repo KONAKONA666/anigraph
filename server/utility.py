@@ -21,9 +21,7 @@ def load_config(file_path):
 
 async def init_redis(conf, loop):
     pool = await aioredis.create_redis_pool(
-        (conf['host'], conf['port']),
-        minsize=conf['minsize'],
-        maxsize=conf['maxsize'],
+        conf['host'],
         loop=loop
     )
     return pool
