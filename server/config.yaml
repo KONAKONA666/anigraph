@@ -5,7 +5,7 @@ redis:
   maxsize: 10
 
 sqlite:
-  path_db: 'db.sqlite'
+  path_db: '/apps/server/db.sqlite'
 
 host: 0.0.0.0
 port: 8080
